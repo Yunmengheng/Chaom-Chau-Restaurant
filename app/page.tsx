@@ -10,14 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-
-      if (scrollY < 50) {
-        setShowScrollDown(true);
-      } else {
-        setShowScrollDown(false);
-      }
+      setShowScrollDown(window.scrollY < 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -27,14 +20,14 @@ export default function Home() {
 
   const scrollToPromotion = (e: React.MouseEvent) => {
     e.preventDefault();
-    const promotionSection = document.getElementById('promotion');
-    if (promotionSection) {
-      promotionSection.scrollIntoView({ 
+    const element = document.getElementById('promotion');
+    if (element) {
+      element.scrollIntoView({ 
         behavior: 'smooth',
         block: 'start'
       });
-      setShowScrollDown(false);
     }
+    setShowScrollDown(false);
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
@@ -48,53 +41,81 @@ export default function Home() {
     }
   };
 
-  const openReservationModal = () => {
-    setShowReservationModal(true);
-  };
+  const openReservationModal = () => setShowReservationModal(true);
+  const closeReservationModal = () => setShowReservationModal(false);
 
-  const closeReservationModal = () => {
-    setShowReservationModal(false);
-  };
+  const navItems = ['reservation', 'promotion', 'popular', 'about'];
+  
+  const heroImages = [
+    { 
+      src: "/Bay-Sach-Morn.jpg", 
+      alt: "Bay Sach Morn", 
+      position: "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2", 
+      size: "w-96 h-64 md:w-[450px] md:h-[300px]", 
+      z: "z-10", 
+      bgColor: "#347928", 
+      textColor: "text-white",
+      description: "A traditional Cambodian soup featuring tender pork ribs simmered in aromatic herbs and spices, served with fresh vegetables."
+    },
+    { 
+      src: "/Bay-Sach-Jruk.jpg", 
+      alt: "Bay Sach Jruk", 
+      position: "-top-8 -right-8", 
+      size: "w-64 h-44 md:w-72 md:h-52", 
+      z: "z-20", 
+      bgColor: "#F9C100", 
+      textColor: "text-gray-800",
+      description: "Hearty chicken soup with lemongrass, ginger, and local herbs - a perfect comfort food that warms the soul."
+    },
+    { 
+      src: "/Kuy-Teav.jpg", 
+      alt: "Kuy Teav", 
+      position: "-bottom-8 -left-8", 
+      size: "w-64 h-44 md:w-72 md:h-52", 
+      z: "z-20", 
+      bgColor: "#F9C100", 
+      textColor: "text-gray-800",
+      description: "Classic Cambodian rice noodle soup with pork, shrimp, and fresh herbs - our most beloved breakfast dish."
+    }
+  ];
+
+  const promotionItems = [
+    { src: "/drink.jpg", alt: "Fresh Drink", label: "Fresh Drink", discount: "25%" },
+    { src: "/Fresh Salad.jpg", alt: "Fresh Salad", label: "Fresh Salad", discount: "30%" },
+    { src: "/Kuy-Teav.jpg", alt: "Noodle Soup", label: "Noodle Soup", discount: "20%" },
+    { src: "/Hot Pot.jpg", alt: "Hot Pot", label: "Hot Pot", discount: "40%" }
+  ];
+
+  const restaurantImages = [
+    { src: "/restaurant.jpg", alt: "Restaurant garden dining area", position: "top-12 left-8" },
+    { src: "/restaurant2.jpg", alt: "Restaurant indoor dining area", position: "bottom-12 right-8" }
+  ];
+
+  const socialIcons = [FaFacebookF, FaTwitter, FaInstagram, FaTiktok];
 
   return (
     <div className="min-h-screen bg-white overflow-hidden" style={{ scrollBehavior: 'smooth' }}>
+      {/* Navigation */}
       <nav className="flex justify-between items-center px-6 md:px-12 lg:px-20 py-6">
         <div className="font-bold text-xl md:text-2xl">
           <span className="text-yellow-400">Chaom Chau</span>
           <span className="text-gray-800 ml-1">Restaurant</span>
         </div>
         <div className="hidden md:flex space-x-8 lg:space-x-12">
-          <a 
-            href="#reservation" 
-            className="text-gray-800 hover:text-yellow-400 transition-colors font-medium"
-            onClick={(e) => handleNavClick(e, 'reservation')}
-          >
-            Reservation
-          </a>
-          <a 
-            href="#promotion" 
-            className="text-gray-800 hover:text-yellow-400 transition-colors font-medium"
-            onClick={(e) => handleNavClick(e, 'promotion')}
-          >
-            Promotion
-          </a>
-          <a 
-            href="#popular" 
-            className="text-gray-800 hover:text-yellow-400 transition-colors font-medium"
-            onClick={(e) => handleNavClick(e, 'popular')}
-          >
-            Popular
-          </a>
-          <a 
-            href="#about" 
-            className="text-gray-800 hover:text-yellow-400 transition-colors font-medium"
-            onClick={(e) => handleNavClick(e, 'about')}
-          >
-            About Us
-          </a>
+          {navItems.map((section) => (
+            <a 
+              key={section}
+              href={`#${section}`} 
+              className="text-gray-800 hover:text-yellow-400 transition-colors font-medium capitalize"
+              onClick={(e) => handleNavClick(e, section)}
+            >
+              {section === 'about' ? 'About Us' : section}
+            </a>
+          ))}
         </div>
       </nav>
 
+      {/* Hero Section */}
       <main className="px-6 md:px-12 lg:px-20 py-8 md:py-16 flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh-120px)]">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 w-full h-full">
           <div className="flex-1 max-w-2xl flex flex-col justify-center">
@@ -109,36 +130,36 @@ export default function Home() {
           </div>
 
           <div className="flex-1 relative min-h-[600px] lg:min-h-[700px] w-full max-w-3xl">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-64 md:w-[450px] md:h-[300px] z-10">
-              <div className="relative w-full h-full rounded-3xl border-4 border-yellow-400 overflow-hidden shadow-2xl">
-                <Image src="/Bay-Sach-Morn.jpg" alt="Bay Sach Morn" fill className="object-cover" />
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-xl" style={{ backgroundColor: '#347928' }}>
-                  Bay Sach Morn
+            {heroImages.map((dish, index) => (
+              <div key={index} className={`absolute ${dish.position} ${dish.size} ${dish.z} group cursor-pointer`}>
+                <div className="relative w-full h-full rounded-3xl border-4 border-yellow-400 overflow-hidden shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:shadow-3xl">
+                  <Image src={dish.src} alt={dish.alt} fill className="object-cover transition-transform duration-500" />
+                  
+                  {/* Overlay that appears on hover */}
+                  <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                    <div className="text-center text-white">
+                      <h3 className="text-lg md:text-xl font-bold mb-2">{dish.alt}</h3>
+                      <p className="text-sm md:text-base leading-relaxed">
+                        {dish.description}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Original label - fades out on hover */}
+                  <div 
+                    className={`absolute bottom-2 left-1/2 transform -translate-x-1/2 ${dish.textColor} px-4 py-1 rounded-full text-sm font-semibold shadow-xl transition-opacity duration-300 group-hover:opacity-0`} 
+                    style={{ backgroundColor: dish.bgColor }}
+                  >
+                    {dish.alt}
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="absolute -top-8 -right-8 w-64 h-44 md:w-72 md:h-52 z-20">
-              <div className="relative w-full h-full rounded-3xl border-4 border-yellow-400 overflow-hidden shadow-2xl">
-                <Image src="/Bay-Sach-Jruk.jpg" alt="Bay Sach Jruk" fill className="object-cover" />
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-800 px-4 py-1 rounded-full text-sm font-semibold shadow-xl">
-                  Bay Sach Jruk
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute -bottom-8 -left-8 w-64 h-44 md:w-72 md:h-52 z-20">
-              <div className="relative w-full h-full rounded-3xl border-4 border-yellow-400 overflow-hidden shadow-2xl">
-                <Image src="/Kuy-Teav.jpg" alt="Kuy Teav" fill className="object-cover" />
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-800 px-4 py-1 rounded-full text-sm font-semibold shadow-xl">
-                  Kuy Teav
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </main>
 
+      {/* Promotion Section */}
       <section id="promotion" className="h-screen px-6 md:px-12 lg:px-20 bg-white flex flex-col justify-center">
         <div className="mb-12">
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
@@ -152,39 +173,34 @@ export default function Home() {
             <div className="flex-1 relative h-[280px] w-full">
               <div className="bg-white rounded-2xl shadow-lg p-4 overflow-hidden">
                 <div className="grid grid-cols-2 grid-rows-2 gap-3 h-[240px] transform -rotate-12 translate-y-2">
-                  <div className="relative rounded-xl overflow-hidden shadow-md">
-                    <Image src="/drink.jpg" alt="Fresh Drink" layout="fill" className="object-cover" />
-                    <div className="absolute bottom-2 left-2 bg-yellow-400 bg-opacity-90 px-2 py-1 rounded text-gray-600 font-medium">
-                      Fresh Drink
+                  {promotionItems.map((item, index) => (
+                    <div key={index} className="relative rounded-xl overflow-hidden shadow-md group cursor-pointer">
+                      <Image src={item.src} alt={item.alt} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                      
+                      {/* Continuous sliding overlay with discount */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-red-500/90 to-orange-500/90 slide-overlay">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                          <div className="text-2xl font-bold mb-1">{item.discount}</div>
+                          <div className="text-xs font-medium uppercase tracking-wide">OFF</div>
+                          <div className="text-sm font-medium mt-1 text-center px-2">
+                            {item.label}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Original caption */}
+                      <div className="absolute bottom-2 left-2 bg-yellow-400 bg-opacity-90 px-2 py-1 rounded text-gray-600 font-medium">
+                        {item.label}
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="relative rounded-xl overflow-hidden shadow-md">
-                    <Image src="/Fresh Salad.jpg" alt="Fresh Salad" layout="fill" className="object-cover" />
-                    <div className="absolute bottom-2 left-2 bg-yellow-400 bg-opacity-90 px-2 py-1 rounded text-gray-600 font-medium">
-                      Fresh Salad
-                    </div>
-                  </div>
-                  
-                  <div className="relative rounded-xl overflow-hidden shadow-md">
-                    <Image src="/Kuy-Teav.jpg" alt="Noodle Soup" layout="fill" className="object-cover" />
-                    <div className="absolute bottom-2 left-2 bg-yellow-400 bg-opacity-90 px-2 py-1 rounded text-gray-600 font-medium">
-                      Noodle Soup
-                    </div>
-                  </div>
-                  
-                  <div className="relative rounded-xl overflow-hidden shadow-md">
-                    <Image src="/Hot Pot.jpg" alt="Hot Pot" layout="fill" className="object-cover" />
-                    <div className="absolute bottom-2 left-2 bg-yellow-400 bg-opacity-90 px-2 py-1 rounded text-gray-600 font-medium">
-                      Hot Pot
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Popular Dishes */}
         <div id="popular">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl md:text-4xl font-bold">
@@ -196,10 +212,10 @@ export default function Home() {
             </a>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="border-2 border-yellow-400 rounded-3xl p-4 flex flex-col hover:shadow-xl transition-shadow duration-300">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="border-2 border-yellow-400 rounded-3xl p-4 flex flex-col hover:shadow-xl hover:scale-105 transition-all duration-300 transform">
                 <div className="relative h-40 mb-4 rounded-2xl overflow-hidden">
-                  <Image src="/Bay-Sach-Morn.jpg" alt="Bay Sach Morn" layout="fill" className="object-cover" />
+                  <Image src="/Bay-Sach-Morn.jpg" alt="Bay Sach Morn" fill className="object-cover" />
                 </div>
                 <h3 className="text-lg font-bold mb-2 text-gray-900">Bay Sach Morn</h3>
                 <p className="text-gray-500 text-sm mb-4 flex-grow">
@@ -214,26 +230,29 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Reservation Section */}
       <section className="py-24 bg-gray-50 overflow-hidden" id="reservation">
         <div className="relative h-[600px] w-full flex items-center justify-center">
           <div className="relative w-full max-w-7xl h-full mx-auto px-6">
-            <div className="absolute top-12 left-8 w-[45%] h-[45%] rounded-3xl overflow-hidden shadow-xl">
-              <Image 
-                src="/restaurant.jpg" 
-                alt="Restaurant garden dining area" 
-                fill 
-                className="object-cover" 
-              />
-            </div>
-
-            <div className="absolute bottom-12 right-8 w-[45%] h-[45%] rounded-3xl overflow-hidden shadow-xl">
-              <Image 
-                src="/restaurant2.jpg" 
-                alt="Restaurant indoor dining area" 
-                fill 
-                className="object-cover" 
-              />
-            </div>
+            {restaurantImages.map((image, index) => (
+              <div key={index} className={`absolute ${image.position} w-[45%] h-[45%] rounded-3xl overflow-hidden shadow-xl group perspective-1000`}>
+                <div className="relative w-full h-full transition-transform duration-700 transform-style-3d group-hover:rotate-y-180">
+                  {/* Front Side - Original Image */}
+                  <div className="absolute inset-0 backface-hidden">
+                    <Image src={image.src} alt={image.alt} fill className="object-cover rounded-3xl" />
+                  </div>
+                  {/* Back Side - Alternative Image */}
+                  <div className="absolute inset-0 backface-hidden rotate-y-180">
+                    <Image 
+                      src={index === 0 ? "/restaurant2.jpg" : "/restaurant3.jpg"} 
+                      alt={index === 0 ? "Restaurant interior view" : "Restaurant night view"} 
+                      fill 
+                      className="object-cover rounded-3xl" 
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
 
             <div className="absolute top-21 right-32 z-10 flex flex-col items-center space-y-4">
               <h2 className="text-5xl md:text-6xl font-bold text-black">Reservations</h2>
@@ -254,6 +273,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-white" id="about">
         <div className="px-6 md:px-12 lg:px-20">
           <hr className="border-t-4 border-yellow-400" />
@@ -267,10 +287,16 @@ export default function Home() {
                 where traditional recipes meet fresh, local ingredients. Enjoy a cozy, welcoming atmosphere perfect for family gatherings, casual dinners, or a night out with friends.
               </p>
               <div className="flex space-x-8">
-                <a href="#reservation" className="text-gray-800 hover:text-yellow-400 font-medium" onClick={(e) => handleNavClick(e, 'reservation')}>Reservation</a>
-                <a href="#promotion" className="text-gray-800 hover:text-yellow-400 font-medium" onClick={(e) => handleNavClick(e, 'promotion')}>Promotion</a>
-                <a href="#popular" className="text-gray-800 hover:text-yellow-400 font-medium" onClick={(e) => handleNavClick(e, 'popular')}>Popular</a>
-                <a href="#about" className="text-gray-800 hover:text-yellow-400 font-medium" onClick={(e) => handleNavClick(e, 'about')}>About Us</a>
+                {navItems.map((section) => (
+                  <a 
+                    key={section}
+                    href={`#${section}`} 
+                    className="text-gray-800 hover:text-yellow-400 font-medium capitalize" 
+                    onClick={(e) => handleNavClick(e, section)}
+                  >
+                    {section === 'about' ? 'About Us' : section}
+                  </a>
+                ))}
               </div>
             </div>
             <div className="flex flex-col items-start lg:items-end">
@@ -290,18 +316,11 @@ export default function Home() {
               <a href="#" className="hover:text-gray-900">Privacy Policy</a>
             </div>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-600 hover:text-yellow-400 transition-colors">
-                <FaFacebookF className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-yellow-400 transition-colors">
-                <FaTwitter className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-yellow-400 transition-colors">
-                <FaInstagram className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-gray-600 hover:text-yellow-400 transition-colors">
-                <FaTiktok className="w-6 h-6" />
-              </a>
+              {socialIcons.map((Icon, index) => (
+                <a key={index} href="#" className="text-gray-600 hover:text-yellow-400 transition-colors">
+                  <Icon className="w-6 h-6" />
+                </a>
+              ))}
             </div>
           </div>
         </div>

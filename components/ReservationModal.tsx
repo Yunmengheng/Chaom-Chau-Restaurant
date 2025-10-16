@@ -164,7 +164,7 @@ export default function ReservationModal({ isOpen, onClose }: ReservationModalPr
         </button>
 
         <div className="relative h-40 rounded-t-lg overflow-hidden">
-          <Image src="/restaurant.jpg" alt="Restaurant" fill className="object-cover" />
+          <Image src="/restaurant3.jpg" alt="Restaurant" fill className="object-cover" />
         </div>
 
         <div className="px-8 py-4 flex justify-between items-center">
